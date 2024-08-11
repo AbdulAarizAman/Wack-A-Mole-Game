@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whack-a-Mole</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+     <style>
+        /* styles.css */
+body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.hole {
+    width: 100px;
+    height: 100px;
+    background-color: #8B4513;
+    position: relative;
+    border-radius: 50%;
+}
+
+.hole.active {
+    background-color: #FFD700;
+}
+
+.mole {
+    width: 80px;
+    height: 80px;
+    background-color: brown;
+    border-radius: 50%;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+     </style>
+</head>
+<body>
+    <h1>Whack-a-Mole Game</h1>
+    
+    <button id="startButton">Start Game</button>
+    <button id="stopButton">Stop Game</button>
+    <h2>Score: <span id="score">0</span></h2>
+    <div class="grid">
+        <div class="hole" id="hole1"></div>
+        <div class="hole" id="hole2"></div>
+        <div class="hole" id="hole3"></div>
+        <div class="hole" id="hole4"></div>
+        <div class="hole" id="hole5"></div>
+        <div class="hole" id="hole6"></div>
+        <div class="hole" id="hole7"></div>
+        <div class="hole" id="hole8"></div>
+        <div class="hole" id="hole9"></div>
+    </div>
+    <!-- <script src="script.js"></script> -->
+<script>
+    // script.js
+let score = 0;
+let activeHole = null;
+let gameInterval = null;
+
+const startButton = document.getElementById('startButton');
+const stopButton = document.getElementById('stopButton');
+const scoreDisplay = document.getElementById('score');
+const holes = document.querySelectorAll('.hole');
+
+startButton.addEventListener('click', startGame);
+stopButton.addEventListener('click', stopGame);
+
+holes.forEach(hole => {
+    hole.addEventListener('click', () => {
+        if (hole === activeHole) {
+            score++;
+            scoreDisplay.textContent = score;
+            deactivateHole();
+        }
+    });
+});
+
+function startGame() {
+    score = 0;
+    scoreDisplay.textContent = score;
+    gameInterval = setInterval(() => {
+        deactivateHole();
+        activateRandomHole();
+    }, 1000);
+}
+
+function stopGame() {
+    clearInterval(gameInterval);
+    deactivateHole();
+    gameInterval = null;
+}
+
+function activateRandomHole() {
+    const randomIndex = Math.floor(Math.random() * holes.length);
+    activeHole = holes[randomIndex];
+    activeHole.classList.add('active');
+    const mole = document.createElement('div');
+    mole.classList.add('mole');
+    activeHole.appendChild(mole);
+}
+
+function deactivateHole() {
+    if (activeHole) {
+        activeHole.classList.remove('active');
+        activeHole.innerHTML = '';
+        activeHole = null;
+    }
+}
+
+</script>
+
+</body>
+</html>
